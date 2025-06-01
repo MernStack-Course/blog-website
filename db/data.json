@@ -1,0 +1,157 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Ahmad",
+      "email": "ahmad@gmail.com",
+      "password": "12345"
+    },
+    {
+      "id": "fd86",
+      "name": "test",
+      "email": "test@gmail.com",
+      "password": "test@123"
+    },
+    {
+      "id": "ff1d",
+      "name": "ahmad",
+      "email": "ahmad@gmail.com",
+      "password": "test@123"
+    },
+    {
+      "id": "6a27",
+      "name": "test",
+      "email": "test@gmail.com",
+      "password": "test@123"
+    },
+    {
+      "id": "b244",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "79e9",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "ec96",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "dba9",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "b2a6",
+      "name": "test2323",
+      "email": "test@gmail.com",
+      "password": "test@123"
+    },
+    {
+      "id": "8b56",
+      "name": "ali",
+      "email": "ali@gmail.com",
+      "password": "ali@123"
+    },
+    {
+      "id": "c2ff",
+      "name": "head",
+      "email": "head@gmail.com",
+      "password": "test@123"
+    },
+    {
+      "id": "96f5",
+      "name": "testdfd",
+      "email": "test@gmail.com",
+      "password": "teste@123"
+    },
+    {
+      "id": "570c",
+      "name": "testdfd",
+      "email": "test@gmail.com",
+      "password": "teste@123"
+    },
+    {
+      "id": "a2d6",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "2f4e",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "c014",
+      "name": "djfklsjl",
+      "email": "dfjlsk@gmail.com",
+      "password": "ksdjfsjfdlk"
+    },
+    {
+      "id": "1c09",
+      "name": "mmm",
+      "email": "mmm@gamil.com",
+      "password": "mmmmm"
+    },
+    {
+      "id": "1298",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "499f"
+    },
+    {
+      "id": "a9e4"
+    },
+    {
+      "id": "98e8"
+    },
+    {
+      "id": "b1a7"
+    },
+    {
+      "id": "84c8"
+    },
+    {
+      "id": "fd8f"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "title": "How to finetun the ai model",
+      "description": "Artificial intelligence has revolutionized various industries and has become a sought-after skill in today’s technology-driven world. From education to entertainment, almost every sector is leveraging the benefits of artificial intelligence to revolutionize their business processes further.AI can be a game-changer for businesses as it can analyze vast data sets, automate complex processes, and provide valuable insights that drive informed decision-making.",
+      "userId": "1",
+      "category": [
+        "technology",
+        "ai"
+      ]
+    }
+  ],
+  "category": [
+    {
+      "id": "1",
+      "name": "technology",
+      "dispalyname": "Technology"
+    }
+  ],
+  "comment": [
+    {
+      "id": "1",
+      "comment": "meaningful post",
+      "userId": "1",
+      "postId": "1"
+    }
+  ]
+}

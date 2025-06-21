@@ -3,10 +3,11 @@ import CustomInput from "../components/customInput";
 import CustomButton from "../components/CustomButton";
 import { useAuthContext } from "../context/auth";
 
-function SignUp() {
-  const { isLoading, signUp } = useAuthContext();
+
+function SignIn() {
+  const { isLoading, signIn } = useAuthContext();
+
   const [data, setData] = useState({
-    name: "",
     email: "",
     password: "",
   });
@@ -20,22 +21,17 @@ function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    signUp(data)
+    signIn(data)
   };
 
   return (
     <div className="h-screen w-full flex items-center justify-center ">
       <div className="p-4 rounded-lg shadow-xl w-xl bg-gradient-to-r from-blue-300 to-blue-400">
         <h1 className="text-center text-2xl mb-4 font-medium">
-          SignUp to you account  
+          SignIn to you account  
         </h1>
         <form onSubmit={handleSubmit} method="post">
-          <CustomInput
-            label="UserName"
-            type="text"
-            value={data.name}
-            onChange={(value) => handleChange("name", value)}
-          />
+        
           <CustomInput
             label="Email-address"
             type="email"
@@ -50,7 +46,7 @@ function SignUp() {
           />
 
           <CustomButton
-            label="SignUp"
+            label="SignIn"
             variant="bg-indiago-500"
             onClick={handleSubmit}
             type="submit"
@@ -62,4 +58,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignIn;

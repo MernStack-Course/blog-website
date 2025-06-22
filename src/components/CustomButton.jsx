@@ -1,4 +1,5 @@
 import React from "react";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
 
 function CustomButton({ label, onClick, variant,  isLoading, type }) {
   return (
@@ -6,9 +7,9 @@ function CustomButton({ label, onClick, variant,  isLoading, type }) {
       <button
         type={type}
         onClick={onClick}
-        className={`${variant} px-4 py-2 w-full  rounded-lg border border-indigo-500 hover:bg-indigo-500 transition-all duration-500 cursor-pointer mt-8 ease-in-out focus:ring-2 focus:ring-indigo-600 text-white`}
+        className={`${variant} px-4 py-2 w-full font-medium  rounded-lg border border-indigo-500 hover:bg-indigo-500 hover:text-white transition-all duration-500 cursor-pointer mt-8 ease-in-out focus:ring-2 focus:ring-indigo-600 `}
       >
-        {isLoading ? 'is' : label}
+        {isLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : label}
       </button>
     </div>
   );

@@ -1,23 +1,64 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { environments } from "../environments/env.development";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
+import { useCreatePost } from "../hooks/CreatePost";
 
 function CreatePost() {
   const TINYMCE_API_KEY = environments.TINYMCE_API_KEY;
   const contentRef = useRef("");
+  const { postSchema, isLoading, createPost } = useCreatePost();
+  const [post, setPost] = useState({
+    title: "",
+    content: "",
+  });
+
+  const [error, setErrors] = useState({ title: [], content:[]});
+
+  const handleChange = async (fieldName, value) => {
+    if (contentRef.current) {
+      console.log(contentRef.current.getContent());
+    }
+    setPost((prev) => ({
+      ...prev,
+      [fieldName]:
+        fieldName === "content" ? contentRef.current.getContent() : value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await postSchema.validate(post, { abortEarly: false });
+      createPost(post)
+      setErrors({title:[], content:[]})
+    } catch (validateError) {
+      let newErrors = { title: [], content: [] };
+      validateError.inner.forEach((err) => {
+        newErrors[err.path] = [...newErrors[err.path], err.message];
+      });
+      setErrors(newErrors);
+    }
+  };
+
   return (
     <div>
       <div className="max-w-4xl mt-10 mx-auto border border-gray-300 rounded-lg  px-4 py-6">
         <h1 className="mb-4 font-bold text-xl">Create New Post </h1>
-        <form action="">
+        <form onSubmit={handleSubmit}>
           <div className="mb-2">
             <CustomInput
               type="text"
               label="Post title"
               placeholder="post title ..."
+              value={post.title}
+              onChange={(value) => handleChange("title", value)}
             />
+            {error &&
+              error["title"].map((message, index) => (
+                <li className="text-red-500 list-none" key={index}>{message}</li>
+              ))}
           </div>
           <div className="mb-1">
             <label htmlFor="conttent" className="font-bold text-md mb-1">
@@ -25,6 +66,8 @@ function CreatePost() {
             </label>
             <div className="mb-1">
               <Editor
+                value={post.content}
+                onChange={(value) => handleChange("content", value)}
                 apiKey={TINYMCE_API_KEY}
                 onInit={(_evt, editor) => (contentRef.current = editor)}
                 initialValue="<p>write whatever you want..</p>"
@@ -60,10 +103,14 @@ function CreatePost() {
                     "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                 }}
               />
+               {error &&
+              error["content"].map((message, index) => (
+                <li className="text-red-500 list-none" key={index}>{message}</li>
+              ))}
             </div>
           </div>
           <div className="mb-2">
-            <CustomButton label="Create" />
+            <CustomButton type="submit" label="Create"  isLoading={isLoading} />
           </div>
         </form>
       </div>

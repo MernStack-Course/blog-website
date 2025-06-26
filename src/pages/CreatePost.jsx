@@ -17,9 +17,6 @@ function CreatePost() {
   const [error, setErrors] = useState({ title: [], content:[]});
 
   const handleChange = async (fieldName, value) => {
-    if (contentRef.current) {
-      console.log(contentRef.current.getContent());
-    }
     setPost((prev) => ({
       ...prev,
       [fieldName]:
@@ -31,7 +28,15 @@ function CreatePost() {
     event.preventDefault();
     try {
       await postSchema.validate(post, { abortEarly: false });
-      createPost(post)
+      const postObject = {
+           title: post.title, 
+           content: post.content, 
+           slug: post.title + Date.now(), 
+           user: localStorage.getItem('user') ? localStorage.getItem('user') : ''
+      }
+      await createPost(postObject)
+      contentRef.current.setContent('')
+      setPost({title:'', content:''})
       setErrors({title:[], content:[]})
     } catch (validateError) {
       let newErrors = { title: [], content: [] };
@@ -66,7 +71,7 @@ function CreatePost() {
             </label>
             <div className="mb-1">
               <Editor
-                value={post.content}
+                value={contentRef.current}
                 onChange={(value) => handleChange("content", value)}
                 apiKey={TINYMCE_API_KEY}
                 onInit={(_evt, editor) => (contentRef.current = editor)}

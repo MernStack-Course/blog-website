@@ -1,11 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import {
-  collection,
-  addDoc,
-  where,
-  query,
-  getDocs,
-} from "firebase/firestore";
+import { createContext, useContext, useEffect, useState } from "react";
+import { collection, addDoc, where, query, getDocs } from "firebase/firestore";
 import { db } from "../firbaseConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -21,8 +15,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const navigate = useNavigate();
 
- 
-
   const signUp = async (data) => {
     setIsLoading(true);
     if (!data.name || !data.email || !data.password) {
@@ -37,11 +29,11 @@ export const AuthProvider = ({ children }) => {
       }
       const doc = collection(db, "user");
       await addDoc(doc, data);
-      setIsLoading(false)
-        toast("your account successfully created", "success");
-       navigate("/signin");
+      setIsLoading(false);
+      toast("your account successfully created", "success");
+      navigate("/signin");
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
       console.log(error);
     }
   };
@@ -52,7 +44,10 @@ export const AuthProvider = ({ children }) => {
       const q = query(colRef, where("email", "==", email));
       const user = await getDocs(q);
       const users = user.docs;
-      const data = users.map((user) => user.data());
+
+      const data = users.map((user) => {
+        return { users: user.data(), usersId: user.id };
+      });
       return data[0];
     } catch (error) {
       console.log(error);
@@ -60,46 +55,41 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signIn = async (data) => {
-     setIsLoading(true)
+    setIsLoading(true);
     if (!data.email || !data.password) {
       toast("email and password are required", "error");
       return;
     }
     try {
-
-      const user = await checkUserEmail(data.email);
-      setIsLoading(false)
+      let { users, usersId } = await checkUserEmail(data.email);
+      let user = { ...users, id: usersId };
+      setIsLoading(false);
       if (!user) {
-        toast("email or password is invalid ", 'error')
-      }else {
-        const randChar  = Math.random()
-                        .toString(36)
-                        .substring(2, 2 + 50);
-        localStorage.setItem("token", randChar)
-        localStorage.setItem("user", JSON.stringify(user))
-        navigate('/')
+        toast("email or password is invalid ", "error");
+      } else {
+        const randChar = Math.random()
+          .toString(36)
+          .substring(2, 2 + 50);
+        localStorage.setItem("token", randChar);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/");
       }
-      
     } catch (error) {
-
-      setIsLoading(false)
+      setIsLoading(false);
       console.log(error);
     }
   };
-  const isAuthenticated = () => {
-    return !!localStorage.getItem("token");
-  };
+ 
 
-  const logout = () => {};
+
+
+
 
   return (
     <AuthContext.Provider
       value={{
         signIn,
         signUp,
-        logout,
-        isAuthenticated, 
-        user,
         token,
         isLoading,
       }}

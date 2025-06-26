@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import Post from "./Post"
 
 function Home() {
  
 
   return (
     <div>
-          welcome {user && user.email} to the home
+           <Post />
     </div>
   )
 }

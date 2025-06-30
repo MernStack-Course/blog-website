@@ -1,33 +1,15 @@
 
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useAuthContext } from "./context/auth";
 
 function App() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null)
-
-  useEffect(()=>{
-      let userData = localStorage.getItem('user');
-      setUser(JSON.parse(userData))
-  }, [])
-
-
-   const signOut = () => {
-    if (localStorage.getItem("user") && localStorage.getItem("token")) {
-      setUser(null)
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      navigate("/");
-    }
-  };
- 
-
+  const {signOut, isAuth, userData} = useAuthContext();
 
   return (
     <>
       <ToastContainer />
-      <nav className="w-full flex items-center justify-between px-4 py-2 shadow">
+      <nav className="w-full flex bg-white items-center sticky  top-0 z-50 justify-between px-4 py-2 shadow">
         <div className="flex items-center gap-6">
           <NavLink
             className={({ isActive }) => (isActive ? "text-blue-700" : "")}
@@ -48,7 +30,7 @@ function App() {
             Create Post
           </NavLink>
         </div>
-        {user ? (
+        {isAuth ? (
           <div className="flex items-center gap-4">
             <button
               type="button"
@@ -61,7 +43,7 @@ function App() {
               href="#"
               className="w-10 h-10 bg-blue-600 text-white text-xl font-bold rounded-full flex items-center justify-center uppercase"
             >
-              {user && user.email.slice(0, 1)}
+              {userData.current && userData.current.email.slice(0, 1)}
             </a>
           </div>
         ) : (

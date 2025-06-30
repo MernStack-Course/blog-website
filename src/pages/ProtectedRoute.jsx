@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useAuthContext } from "../context/auth";
 
 function ProtectedRoute({ children }) {
-  const [isAuth, setIsAuth] = useState(localStorage.getItem('token') ? true : false);
+  const {isAuth} = useAuthContext();
   return <div> 
      {isAuth ? children : <Navigate to="/signin" />}
   </div>;

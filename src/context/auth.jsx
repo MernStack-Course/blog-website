@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { collection, addDoc, where, query, getDocs } from "firebase/firestore";
 import { db } from "../firbaseConfig";
 import { toast } from "react-toastify";
@@ -10,7 +10,8 @@ const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  let userData = useRef(null);
+  const [isAuth, setIsAuth] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
@@ -72,6 +73,8 @@ export const AuthProvider = ({ children }) => {
           .substring(2, 2 + 50);
         localStorage.setItem("token", randChar);
         localStorage.setItem("user", JSON.stringify(user));
+        userData.current = user;
+        setIsAuth(true)
         navigate("/");
       }
     } catch (error) {
@@ -81,16 +84,33 @@ export const AuthProvider = ({ children }) => {
   };
  
 
+ const signOut = ()=> {
+       if(isAuth){
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          userData.current = null;
+          setIsAuth(false)
+       }
+ }
 
 
-
+ useEffect(()=> {
+         
+        const user = localStorage.getItem('user')
+        userData.current = JSON.parse(user)
+        setIsAuth(true)
+       
+ },[])
 
   return (
     <AuthContext.Provider
       value={{
         signIn,
         signUp,
+        signOut, 
+        isAuth,
         token,
+        userData, 
         isLoading,
       }}
     >

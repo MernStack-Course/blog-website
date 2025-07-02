@@ -11,7 +11,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   let userData = useRef(null);
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(true)
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
@@ -95,11 +95,11 @@ export const AuthProvider = ({ children }) => {
 
 
  useEffect(()=> {
-         
         const user = localStorage.getItem('user')
         userData.current = JSON.parse(user)
-        setIsAuth(true)
-       
+        if(user){
+          setIsAuth(true)
+        }
  },[])
 
   return (

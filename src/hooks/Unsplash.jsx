@@ -17,7 +17,7 @@ export const useUnsplash = () => {
   const getImages = async (post_length = 10, post_title = "food") => {
     try {
       const response = await axios.get(
-        `${environments.UNSPLASH_URL}?client_id=${environments.UNSPLASH_ACCESS_KEY}&query=${post_title}&limit=${post_length}`
+        `${environments.UNSPLASH_URL}?client_id=${environments.UNSPLASH_ACCESS_KEY}&query=${post_title}&page=1&limit=${post_length}`
       );
       setImages(response.data);
     } catch (error) {

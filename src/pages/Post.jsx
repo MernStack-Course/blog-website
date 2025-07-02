@@ -26,7 +26,7 @@ function Post() {
           posts.map((post, index)  => (
             <div  key={index} className="border border-blue-500 h-[350px] rounded-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ease-in-out">
               <div className="w-full h-40">
-                  { images && images.map((image) =>    <img src={image.urls.raw} alt={image.slug} key={image.id} />) } 
+                  {/* { images && images.map((image) =>    <img src={image.urls.raw} alt={image.slug} key={image.id} />) }  */}
               </div>
               <div className="w-full px-2">
                 <h1 className="font-bold text-lg mb-2">{post.title}</h1>

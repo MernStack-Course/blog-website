@@ -6,7 +6,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { useEffect, useState } from "react";
-import { app, db } from "../firbaseConfig";
+import { storage ,db } from "../firbaseConfig";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
@@ -41,12 +41,13 @@ export const useCreatePost = () => {
 
   const uploadImages = async (files) => {
     try {
-      const strage = getStorage(app);
       const storageRef = ref(
-        strage,
+        storage,
         `images/${Array.from(files).map((file) => file.name)}`
       );
-     const uploadImage = await uploadBytesResumable(storageRef, files);
+     const uploadImage = await uploadBytesResumable(storageRef, files, {
+        contentType: 'multipart/form-data'
+     });
      console.log(uploadImage);
     } catch (error) {
       setError(error);

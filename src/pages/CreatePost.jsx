@@ -5,11 +5,20 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { useCreatePost } from "../hooks/CreatePost";
 import UploadImageHolder from "../../public/images/placeholder.jpg";
+import CustomModal from "../components/CustomModal";
+import { useCategory } from "../hooks/Category";
 
 function CreatePost() {
   const TINYMCE_API_KEY = environments.TINYMCE_API_KEY;
   const contentRef = useRef("");
   const { postSchema, isLoading, createPost } = useCreatePost();
+  const {
+    category,
+    createCategory,
+    isLoading: isLoad,
+    setCategory,
+    validationSchema,
+  } = useCategory();
   const [post, setPost] = useState({
     title: "",
     content: "",
@@ -25,11 +34,10 @@ function CreatePost() {
       URL.createObjectURL(file)
     );
     setImages(imageUrls);
-    if(files[0] instanceof File){
-        setFiles(files)
+    if (files[0] instanceof File) {
+      setFiles(files);
     }
   }
-
   const [error, setErrors] = useState({ title: [], content: [] });
 
   const handleChange = async (fieldName, value) => {
@@ -38,6 +46,25 @@ function CreatePost() {
       [fieldName]:
         fieldName === "content" ? contentRef.current.getContent() : value,
     }));
+  };
+
+  const handleCategoryChange = (fieldName, value) => {
+    setCategory({
+      [fieldName]: value,
+    });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(category, { abortEarly: false });
+    } catch (errors) {
+      const newErrors = {};
+      errors.inner.forEach((error) => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -63,11 +90,10 @@ function CreatePost() {
     }
   };
 
-  function deleteImage(imageIndex){
-       const restImages = images.filter((_,index) =>    index !== imageIndex);
-       setImages(restImages)
+  function deleteImage(imageIndex) {
+    const restImages = images.filter((_, index) => index !== imageIndex);
+    setImages(restImages);
   }
-
   return (
     <div>
       <div className="max-w-4xl mt-10 mx-auto border border-gray-300 rounded-lg  px-4 py-6">
@@ -140,40 +166,57 @@ function CreatePost() {
                 ))}
             </div>
           </div>
-           <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               {images &&
                 images.map((image, index) => (
                   <div className="w-40 h-30  relative rounded-lg" key={index}>
-                    <img src={image}  alt="" className="w-40 h-30" />
-                    <button type="button" onClick={()=>deleteImage(index)} className="absolute top-0 w-8  h-8 cursor-pointer rounded-full hover:bg-red-500 hover:text-white">❌</button>
+                    <img src={image} alt="" className="w-40 h-30" />
+                    <button
+                      type="button"
+                      onClick={() => deleteImage(index)}
+                      className="absolute top-0 w-8  h-8 cursor-pointer rounded-full hover:bg-red-500 hover:text-white"
+                    >
+                      ❌
+                    </button>
                   </div>
                 ))}
             </div>
-          <div className="mt-4 flex items-end justify-end gap-4">
-            <div className="">
-              <label htmlFor="image">
-                <img
-                  src={UploadImageHolder}
-                  className="w-40 rounded-md p-4 border h-30 border-gray-300 cursor-pointer  border-dashed "
+            <div className="mt-4 flex items-end justify-end gap-4">
+              <div className="">
+                <label htmlFor="image">
+                  <img
+                    src={UploadImageHolder}
+                    className="w-40 rounded-md p-4 border h-30 border-gray-300 cursor-pointer  border-dashed "
+                  />
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
+                  id="image"
+                  hidden
                 />
-              </label>
-              <input
-                type="file"
-                multiple
-                onChange={handleFileChange}
-                id="image"
-                hidden
-              />
+              </div>
             </div>
-           
           </div>
-           </div>
           <div className="mb-2">
             <CustomButton type="submit" label="Create" isLoading={isLoading} />
           </div>
         </form>
       </div>
+
+      {/* ========  category modal  ======== */}
+      <CustomModal title="New Category" onSubmit={onSubmit}>
+        <CustomInput
+          value={category.displayName}
+          onChange={(value) => handleCategoryChange("displayName", value)}
+        />
+        <CustomInput
+          value={category.name}
+          onChange={(value) => handleCategoryChange("name", value)}
+        />
+      </CustomModal>
     </div>
   );
 }
